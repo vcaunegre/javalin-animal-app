@@ -21,4 +21,9 @@ public class DefaultAnimalService implements AnimalService {
     public List<Animal> getAllAnimals() {
         return animalRepository.getAllAnimals();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        animalRepository.deleteById(id);
+    }
 }

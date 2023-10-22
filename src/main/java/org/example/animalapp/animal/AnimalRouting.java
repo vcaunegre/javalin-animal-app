@@ -5,6 +5,8 @@ import io.javalin.Javalin;
 import io.javalin.apibuilder.ApiBuilder;
 import org.example.config.Routing;
 
+import static io.javalin.apibuilder.ApiBuilder.*;
+
 public class AnimalRouting extends Routing<AnimalController> {
     private Javalin javalin;
 
@@ -16,8 +18,11 @@ public class AnimalRouting extends Routing<AnimalController> {
     @Override
     public void bindRoutes() {
         javalin.routes(() -> {
-            ApiBuilder.path("api/animals", () -> {
-                ApiBuilder.get(ctx -> getController().index(ctx));
+            path("api/animals", () -> {
+                get(ctx -> getController().index(ctx));
+                path("delete-by-id/{id}", () -> {
+                    delete(ctx -> getController().deleteById(ctx));
+                });
             });
         });
     }

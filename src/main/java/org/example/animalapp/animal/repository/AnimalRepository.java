@@ -9,7 +9,7 @@ public interface AnimalRepository {
 
     Animal addAnimal(Animal animal);
 
-    void deleteAnimal(long animalId);
+    void deleteById(long animalId);
 
     void deleteByName(String name);
 }

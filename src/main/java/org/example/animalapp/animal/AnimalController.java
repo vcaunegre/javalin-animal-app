@@ -22,6 +22,10 @@ public class AnimalController {
     ctx.json(animalService.getAllAnimals());
 }
 
+public void deleteById(Context ctx){
+       animalService.deleteById(ctx.pathParamAsClass("id",Long.class).get());
+}
+
 //    public static void routes(Javalin app) {
 //        AnimalRepository animalRepository = new AnimalRepository();
 //        app.get("/", ctx -> {

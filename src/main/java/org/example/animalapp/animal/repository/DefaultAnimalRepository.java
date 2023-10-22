@@ -47,6 +47,7 @@ public class DefaultAnimalRepository implements AnimalRepository {
 
     public List<Animal> getAllAnimals() {
         try (EntityManager em = initSession()) {
+            init(em);
             List<Animal> result = new ArrayList<>();
             em.getTransaction().begin();
             result = em.createQuery("SELECT a FROM Animal a", Animal.class).getResultList();
@@ -64,7 +65,7 @@ public class DefaultAnimalRepository implements AnimalRepository {
         }
     }
 
-    public void deleteAnimal(long animalId) {
+    public void deleteById(long animalId) {
         try (EntityManager em = initSession()) {
             em.getTransaction().begin();
             Animal animal = em.find(Animal.class, animalId);

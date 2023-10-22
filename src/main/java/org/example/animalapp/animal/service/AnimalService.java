@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AnimalService {
     List<Animal> getAllAnimals();
+
+    void deleteById(Long id);
 }
