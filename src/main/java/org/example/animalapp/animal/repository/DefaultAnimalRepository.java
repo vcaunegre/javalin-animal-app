@@ -4,11 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import org.example.App;
+import org.example.animalapp.animal.AnimalRouting;
+import org.example.animalapp.animal.dto.CreateAnimalDto;
+import org.example.animalapp.animal.entities.Animal;
 import org.example.animalapp.animal.entities.AnimalKind;
+import org.example.animalapp.animal.entities.AnimalRace;
 import org.example.animalapp.animal.entities.Owner;
 import org.example.animalapp.animal.persistence.CustomPersistenceUnitInfo;
-import org.example.animalapp.animal.entities.Animal;
-import org.example.animalapp.animal.entities.AnimalRace;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,7 @@ public class DefaultAnimalRepository implements AnimalRepository {
 
     private EntityManager initSession() {
         props.put("hibernate.show_sql", "true");
-        props.put("hibernate.hbm2ddl.auto", "update"); // create, none, update
+        props.put("hibernate.hbm2ddl.auto", "none"); // create, none, update
         EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(puName), props);
         return emf.createEntityManager();
     }
@@ -45,12 +47,19 @@ public class DefaultAnimalRepository implements AnimalRepository {
         em.getTransaction().commit(); // end of transaction
     }
 
+    //TODO: correct problem too many requests
     public List<Animal> getAllAnimals() {
         try (EntityManager em = initSession()) {
-            init(em);
             List<Animal> result = new ArrayList<>();
             em.getTransaction().begin();
-            result = em.createQuery("SELECT a FROM Animal a", Animal.class).getResultList();
+            String str= """
+                    SELECT new %s.AnimalResponseDTO(a.id,a.name,new %s.OwnerResponseDTO(ow),
+                    new %s.AnimalKindResponseDTO(ak.id, ak.name),new %s.AnimalRaceResponseDTO(ar.id, ar.name)) 
+                    FROM Animal a LEFT JOIN AnimalKind ak on a.animalKind = ak
+                     LEFT JOIN Owner ow on a = ow.animal LEFT JOIN AnimalRace ar on a.animalRace = ar
+                    """.replaceAll("%s","org.example.animalapp.animal.dto");;
+
+            result = em.createQuery(str, Animal.class).getResultList();
             em.getTransaction().commit(); // end of transaction
             return result;
         }
@@ -81,9 +90,27 @@ public class DefaultAnimalRepository implements AnimalRepository {
         try (EntityManager em = initSession()) {
             em.getTransaction().begin();
             Query qAnimal = em.createQuery("DELETE FROM Animal a WHERE a.name = :name");
-            qAnimal.setParameter("name",name);
+            qAnimal.setParameter("name", name);
             qAnimal.executeUpdate();
             em.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public Animal createNewAnimal(CreateAnimalDto nAnimal) {
+        try (EntityManager em = initSession()) {
+            em.getTransaction().begin();
+            Animal animal = new Animal().setName(nAnimal.name()).setDateOfBirth(nAnimal.dateOfBirth());
+            AnimalKind ak=em.find(AnimalKind.class,nAnimal.animalKindId());
+            AnimalRace ar=em.find(AnimalRace.class,nAnimal.animalRaceId());
+            Owner o=em.find(Owner.class,nAnimal.ownerId());
+            animal.setAnimalKind(ak).setAnimalRace(ar).setOwner(o);
+
+            em.persist(animal);
+
+            em.getTransaction().commit();
+
+            return animal;
         }
     }
 }

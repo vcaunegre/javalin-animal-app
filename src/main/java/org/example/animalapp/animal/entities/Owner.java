@@ -13,7 +13,7 @@ public class Owner {
 
     private String name;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
     @JsonIgnore
     private Animal animal;
 

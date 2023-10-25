@@ -20,6 +20,7 @@ public class AnimalRouting extends Routing<AnimalController> {
         javalin.routes(() -> {
             path("api/animals", () -> {
                 get(ctx -> getController().index(ctx));
+                post(ctx->getController().addAnimal(ctx));
                 path("delete-by-id/{id}", () -> {
                     delete(ctx -> getController().deleteById(ctx));
                 });

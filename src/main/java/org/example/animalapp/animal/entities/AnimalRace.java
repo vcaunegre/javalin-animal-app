@@ -12,7 +12,7 @@ public class AnimalRace {
     private Long id;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "animal_kind_id")
     @JsonIgnore
     private AnimalKind animalKind;

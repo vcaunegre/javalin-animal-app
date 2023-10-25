@@ -19,15 +19,16 @@ public class Animal {
     private LocalDate dateOfBirth;
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "animal_kind_id")
     private AnimalKind animalKind;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
     @JoinColumn(name = "animal_race_id")
     private AnimalRace animalRace;
 
    @OneToOne(mappedBy = "animal")
+   @JoinColumn(name = "owner_id")
    private Owner owner;
 
     public Long getId() {
