@@ -3,6 +3,7 @@ package org.example.animalapp;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 import io.javalin.Javalin;
+import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.example.config.AppEntrypoint;
 import org.example.config.EntrypointType;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,11 @@ public class WebModule extends AbstractModule {
 
     @NotNull
     public static WebModule create() {
-        return new WebModule(Javalin.create());
+        return new WebModule(Javalin.create(config->{
+            config.plugins.enableCors(cors -> {
+                cors.add(CorsPluginConfig::anyHost);
+            });
+        }));
     }
 
     @Override
