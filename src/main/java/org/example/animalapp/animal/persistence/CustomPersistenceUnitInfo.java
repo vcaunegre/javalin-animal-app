@@ -42,6 +42,12 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
         dataSource.setJdbcUrl("jdbc:postgresql://localhost/javalin_animals");
         dataSource.setUsername("postgres");
         dataSource.setPassword("");
+        dataSource.addDataSourceProperty("cachePrepStmts","true");
+        dataSource.addDataSourceProperty( "prepStmtCacheSize" , "250" );
+        dataSource.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
+        dataSource.setConnectionTimeout(34000);
+        dataSource.setIdleTimeout(28740000);
+        dataSource.setMaxLifetime(28740000);
 
         return dataSource;
     }

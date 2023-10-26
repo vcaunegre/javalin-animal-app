@@ -1,116 +1,126 @@
 package org.example.animalapp.animal.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
 import org.example.App;
-import org.example.animalapp.animal.AnimalRouting;
-import org.example.animalapp.animal.dto.CreateAnimalDto;
-import org.example.animalapp.animal.entities.Animal;
-import org.example.animalapp.animal.entities.AnimalKind;
-import org.example.animalapp.animal.entities.AnimalRace;
-import org.example.animalapp.animal.entities.Owner;
-import org.example.animalapp.animal.persistence.CustomPersistenceUnitInfo;
-import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.example.animalapp.animal.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DefaultAnimalRepository implements AnimalRepository {
-    String puName = "pu-name";
-    Map<String, String> props = new HashMap<>();
     Logger logger = LoggerFactory.getLogger(App.class);
 
-    private EntityManager initSession() {
-        props.put("hibernate.show_sql", "true");
-        props.put("hibernate.hbm2ddl.auto", "none"); // create, none, update
-        EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(puName), props);
-        return emf.createEntityManager();
-    }
-
-    private void init(EntityManager em) {
-        em.getTransaction().begin();
-        AnimalRace pitbull = new AnimalRace().setName("Pitbull");
-        AnimalRace chihuahua = new AnimalRace().setName("Chihuahua");
-        AnimalKind dog = new AnimalKind().setName("Dog").setAvgLifeExpectancy(12).setRaces(List.of(pitbull, chihuahua));
-        pitbull.setAnimalKind(dog);
-        chihuahua.setAnimalKind(dog);
-        Owner owner = new Owner().setName("John Doe");
-        Animal bobby = new Animal().setName("Bobby").setOwner(owner).setAnimalKind(dog).setAnimalRace(chihuahua).setDateOfBirth(LocalDate.of(2022, 12, 12));
-        owner.setAnimal(bobby);
-        em.persist(owner);
-        em.getTransaction().commit(); // end of transaction
-    }
-
-    //TODO: correct problem too many requests
-    public List<Animal> getAllAnimals() {
-        try (EntityManager em = initSession()) {
-            List<Animal> result = new ArrayList<>();
-            em.getTransaction().begin();
-            String str= """
-                    SELECT new %s.AnimalResponseDTO(a.id,a.name,new %s.OwnerResponseDTO(ow),
-                    new %s.AnimalKindResponseDTO(ak.id, ak.name),new %s.AnimalRaceResponseDTO(ar.id, ar.name)) 
-                    FROM Animal a LEFT JOIN AnimalKind ak on a.animalKind = ak
-                     LEFT JOIN Owner ow on a = ow.animal LEFT JOIN AnimalRace ar on a.animalRace = ar
-                    """.replaceAll("%s","org.example.animalapp.animal.dto");;
-
-            result = em.createQuery(str, Animal.class).getResultList();
-            em.getTransaction().commit(); // end of transaction
-            return result;
-        }
-    }
-
-    public Animal addAnimal(Animal animal) {
-        try (EntityManager em = initSession()) {
-            em.getTransaction().begin();
-            em.persist(animal);
-            em.getTransaction().commit();
-            return animal;
-        }
-    }
-
-    public void deleteById(long animalId) {
-        try (EntityManager em = initSession()) {
-            em.getTransaction().begin();
-            Animal animal = em.find(Animal.class, animalId);
-            if (animal != null) {
-                em.remove(animal.getOwner());
-                em.remove(animal);
+    public List<AnimalResponseDTO> getAllAnimals() {
+        List<AnimalResponseDTO> list = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+            PreparedStatement ps = con.prepareStatement("""
+                    SELECT a.id,a.name,a.date_of_birth,ak.id as ak_id, ak.name as ak_name, ak.avglifeexpectancy,
+                     ar.id as ar_id, ar.name as race, o.id as o_id, o.name as o_name
+                    FROM ANIMALS a JOIN ANIMAL_KINDS ak ON ak.id=a.animal_kind_id 
+                    JOIN ANIMAL_RACES ar ON a.animal_race_id = ar.id
+                    JOIN OWNERS o ON a.owner_id = o.id
+                    """);
+            var r = ps.executeQuery();
+            while (r.next()) {
+                AnimalResponseDTO ar = new AnimalResponseDTO(r.getLong("id"), r.getString("name"), r.getDate("date_of_birth").toLocalDate(), new OwnerResponseDTO(r.getLong("o_id"), r.getString("o_name")), new AnimalKindResponseDTO(r.getLong("ak_id"), r.getString("ak_name"), r.getFloat("avglifeexpectancy")), new AnimalRaceResponseDTO(r.getLong("ar_id"), r.getString("race")));
+                list.add(ar);
             }
-            em.getTransaction().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return list;
     }
 
-    public void deleteByName(String name) {
-        try (EntityManager em = initSession()) {
-            em.getTransaction().begin();
-            Query qAnimal = em.createQuery("DELETE FROM Animal a WHERE a.name = :name");
-            qAnimal.setParameter("name", name);
-            qAnimal.executeUpdate();
-            em.getTransaction().commit();
+    public void createNewAnimal(CreateAnimalDto animal) {
+        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+            String[] generatedColumns = {"id"};
+            PreparedStatement ps = con.prepareStatement("INSERT INTO OWNERS(name) VALUES(?)", generatedColumns);
+            ps.setString(1, animal.ownerName());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            Long ownerId = null;
+            while (rs.next()) {
+                ownerId = rs.getLong(1);
+            }
+
+            ps = con.prepareStatement("INSERT INTO ANIMALS(name,date_of_Birth,animal_kind_id,animal_race_id,owner_id) VALUES(?,?,?,?,?)");
+            ps.setString(1, animal.name());
+            ps.setDate(2, Date.valueOf(animal.dateOfBirth()));
+            ps.setLong(3, animal.animalKindId());
+            ps.setLong(4, animal.animalRaceId());
+            if (ownerId != null) {
+                ps.setLong(5, ownerId);
+            } else {
+            }
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public Animal createNewAnimal(CreateAnimalDto nAnimal) {
-        try (EntityManager em = initSession()) {
-            em.getTransaction().begin();
-            Animal animal = new Animal().setName(nAnimal.name()).setDateOfBirth(nAnimal.dateOfBirth());
-            AnimalKind ak=em.find(AnimalKind.class,nAnimal.animalKindId());
-            AnimalRace ar=em.find(AnimalRace.class,nAnimal.animalRaceId());
-            Owner o=em.find(Owner.class,nAnimal.ownerId());
-            animal.setAnimalKind(ak).setAnimalRace(ar).setOwner(o);
+    public void editAnimal(EditAnimalDto animal) {
+        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+PreparedStatement ps=con.prepareStatement("""
+UPDATE ANIMALS SET NAME=?,DATE_OF_BIRTH=?,ANIMAL_KIND_ID=?,ANIMAL_RACE_ID=?
+WHERE ID = ?
+""");
+ps.setString(1,animal.name());
+ps.setDate(2,Date.valueOf(animal.dateOfBirth()));
+ps.setLong(3,animal.kindId());
+ps.setLong(4,animal.raceId());
+ps.setLong(5,animal.id());
+ps.execute();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        }
 
-            em.persist(animal);
-
-            em.getTransaction().commit();
-
-            return animal;
+    public void deleteById(long animalId) {
+        Long ownerId = null;
+        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+            PreparedStatement ps = con.prepareStatement("SELECT owner_id FROM ANIMALS WHERE ID = ?");
+            ps.setLong(1, animalId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ownerId = rs.getLong("owner_id");
+            }
+            ps = con.prepareStatement("DELETE FROM ANIMALS WHERE ID = ?");
+            ps.setLong(1, animalId);
+            ps.execute();
+            if (ownerId != null) {
+                ps = con.prepareStatement("DELETE FROM OWNERS WHERE ID = ?");
+                ps.setLong(1, ownerId);
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
+    public void deleteByName(String name) {
+        Long ownerId = null;
+        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+            PreparedStatement ps = con.prepareStatement("SELECT owner_id FROM ANIMALS WHERE NAME LIKE ?");
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ownerId = rs.getLong("owner_id");
+            }
+            ps = con.prepareStatement("DELETE FROM ANIMALS WHERE NAME LIKE ?");
+            ps.setString(1, name);
+            ps.execute();
+            if (ownerId != null) {
+                ps = con.prepareStatement("DELETE FROM OWNERS WHERE ID = ?");
+                ps.setLong(1, ownerId);
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

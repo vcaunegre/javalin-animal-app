@@ -3,18 +3,11 @@ package org.example.animalapp.animal.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "animal_races")
 public class AnimalRace {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JoinColumn(name = "animal_kind_id")
-    @JsonIgnore
     private AnimalKind animalKind;
 
     public String getName() {

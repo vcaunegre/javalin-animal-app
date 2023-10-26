@@ -5,31 +5,30 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "animals")
 public class Animal {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    @Column(name = "date_of_birth",nullable = false)
-    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
-
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "animal_kind_id")
     private AnimalKind animalKind;
 
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
-    @JoinColumn(name = "animal_race_id")
     private AnimalRace animalRace;
 
-   @OneToOne(mappedBy = "animal")
-   @JoinColumn(name = "owner_id")
    private Owner owner;
+
+    public Animal() {
+    }
+
+    public Animal(Long id, String name, LocalDate dateOfBirth, AnimalKind animalKind, AnimalRace animalRace, Owner owner) {
+        this.id = id;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.animalKind = animalKind;
+        this.animalRace = animalRace;
+        this.owner = owner;
+    }
 
     public Long getId() {
         return id;

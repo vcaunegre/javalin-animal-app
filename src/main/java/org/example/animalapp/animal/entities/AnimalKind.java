@@ -4,17 +4,12 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity
-@Table(name = "animal_kinds")
 public class AnimalKind {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private float avgLifeExpectancy;
 
-    @OneToMany(mappedBy = "animalKind",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<AnimalRace> races;
 
     public List<AnimalRace> getRaces() {
