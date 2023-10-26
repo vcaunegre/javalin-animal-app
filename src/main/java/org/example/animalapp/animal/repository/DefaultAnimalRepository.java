@@ -1,6 +1,7 @@
 package org.example.animalapp.animal.repository;
 
 import org.example.App;
+import org.example.Utils;
 import org.example.animalapp.animal.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ public class DefaultAnimalRepository implements AnimalRepository {
 
     public List<AnimalResponseDTO> getAllAnimals() {
         List<AnimalResponseDTO> list = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
             PreparedStatement ps = con.prepareStatement("""
                     SELECT a.id,a.name,a.date_of_birth,ak.id as ak_id, ak.name as ak_name, ak.avglifeexpectancy,
                      ar.id as ar_id, ar.name as race, o.id as o_id, o.name as o_name
@@ -34,7 +35,7 @@ public class DefaultAnimalRepository implements AnimalRepository {
     }
 
     public void createNewAnimal(CreateAnimalDto animal) {
-        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
             String[] generatedColumns = {"id"};
             PreparedStatement ps = con.prepareStatement("INSERT INTO OWNERS(name) VALUES(?)", generatedColumns);
             ps.setString(1, animal.ownerName());
@@ -63,7 +64,7 @@ public class DefaultAnimalRepository implements AnimalRepository {
 
     @Override
     public void editAnimal(EditAnimalDto animal) {
-        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
 PreparedStatement ps=con.prepareStatement("""
 UPDATE ANIMALS SET NAME=?,DATE_OF_BIRTH=?,ANIMAL_KIND_ID=?,ANIMAL_RACE_ID=?
 WHERE ID = ?
@@ -81,7 +82,7 @@ ps.execute();
 
     public void deleteById(long animalId) {
         Long ownerId = null;
-        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
             PreparedStatement ps = con.prepareStatement("SELECT owner_id FROM ANIMALS WHERE ID = ?");
             ps.setLong(1, animalId);
             ResultSet rs = ps.executeQuery();
@@ -103,7 +104,7 @@ ps.execute();
 
     public void deleteByName(String name) {
         Long ownerId = null;
-        try (Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/javalin_animals", "postgres", "")) {
+        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
             PreparedStatement ps = con.prepareStatement("SELECT owner_id FROM ANIMALS WHERE NAME LIKE ?");
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
