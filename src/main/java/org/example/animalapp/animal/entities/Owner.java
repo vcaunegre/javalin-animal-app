@@ -1,7 +1,6 @@
 package org.example.animalapp.animal.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 
 public class Owner {
 

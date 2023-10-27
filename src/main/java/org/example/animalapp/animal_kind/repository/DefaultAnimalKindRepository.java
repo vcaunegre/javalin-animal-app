@@ -16,7 +16,7 @@ public class DefaultAnimalKindRepository implements AnimalKindRepository {
     @Override
     public List<KindResponse> getAllKinds() {
         List<KindResponse> list = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
+        try (Connection con = DriverManager.getConnection(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD)) {
             PreparedStatement ps = con.prepareStatement("""
                     SELECT ak.id,ak.name,ak.avgLifeExpectancy FROM ANIMAL_KINDS ak
                     """);
@@ -35,7 +35,7 @@ public class DefaultAnimalKindRepository implements AnimalKindRepository {
 
     @Override
     public void deleteById(long kindId) {
-        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
+        try (Connection con = DriverManager.getConnection(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD)) {
             PreparedStatement ps = con.prepareStatement("DELETE FROM ANIMAL_KINDS WHERE ID = ?");
             ps.setLong(1, kindId);
             ps.execute();
@@ -46,7 +46,7 @@ public class DefaultAnimalKindRepository implements AnimalKindRepository {
 
     @Override
     public void createNewKind(CreateKind cKind) {
-        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
+        try (Connection con = DriverManager.getConnection(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD)) {
             PreparedStatement ps = con.prepareStatement("INSERT INTO ANIMAL_KINDS(name,avgLifeExpectancy) VALUES(?,?)");
             ps.setString(1, cKind.kindName());
             ps.setFloat(2, cKind.avgLifeExpectancy());
@@ -58,7 +58,7 @@ public class DefaultAnimalKindRepository implements AnimalKindRepository {
 
     @Override
     public void editKind(EditKind editKind) {
-        try (Connection con = DriverManager.getConnection(Utils.URL, Utils.USER, Utils.PASSWORD)) {
+        try (Connection con = DriverManager.getConnection(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD)) {
             PreparedStatement ps = con.prepareStatement("""
                     UPDATE ANIMAL_KINDS SET NAME=?,avgLifeExpectancy=?
                     WHERE ID = ?

@@ -18,6 +18,9 @@ public class AnimalRouting extends Routing<AnimalController> {
     @Override
     public void bindRoutes() {
         javalin.routes(() -> {
+            path("/",()->{
+                get(ctx->ctx.json("Hello from API"));
+            });
             path("api/animals", () -> {
                 get(ctx -> getController().index(ctx));
                 post(ctx->getController().addAnimal(ctx));

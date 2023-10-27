@@ -4,7 +4,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class Utils {
     private static Dotenv dotenv = Dotenv.load();
-   public static String URL = dotenv.get("URL");
-   public static String PASSWORD =dotenv.get("PASSWORD");
-   public static String USER = dotenv.get("USER");
+   public static String PG_URL = dotenv.get("PG_URL");
+   public static String PG_PASSWORD =dotenv.get("PG_PASSWORD");
+   public static String PG_USER = dotenv.get("PG_USER");
 }
