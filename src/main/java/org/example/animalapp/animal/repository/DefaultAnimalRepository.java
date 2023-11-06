@@ -13,7 +13,8 @@ import java.util.List;
 public class DefaultAnimalRepository implements AnimalRepository {
     Logger logger = LoggerFactory.getLogger(App.class);
 
-    public List<AnimalResponseDTO> getAllAnimals() {
+    @Override
+    public List<AnimalResponseDTO> getAllAnimals(int page, int size) {
         List<AnimalResponseDTO> list = new ArrayList<>();
         try (Connection con = DriverManager.getConnection(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD)) {
             PreparedStatement ps = con.prepareStatement("""
@@ -22,16 +23,57 @@ public class DefaultAnimalRepository implements AnimalRepository {
                     FROM ANIMALS a JOIN ANIMAL_KINDS ak ON ak.id=a.animal_kind_id 
                     JOIN ANIMAL_RACES ar ON a.animal_race_id = ar.id
                     JOIN OWNERS o ON a.owner_id = o.id
+                    LIMIT ? OFFSET ?
                     """);
+            ps.setInt(1, size);
+            ps.setInt(2, size * page);
             var r = ps.executeQuery();
             while (r.next()) {
-                AnimalResponseDTO ar = new AnimalResponseDTO(r.getLong("id"), r.getString("name"), r.getDate("date_of_birth").toLocalDate(), new OwnerResponseDTO(r.getLong("o_id"), r.getString("o_name")), new AnimalKindResponseDTO(r.getLong("ak_id"), r.getString("ak_name"), r.getFloat("avglifeexpectancy")), new AnimalRaceResponseDTO(r.getLong("ar_id"), r.getString("race")));
+                AnimalResponseDTO ar = new AnimalResponseDTO(r.getLong("id"),
+                        r.getString("name"),
+                        r.getDate("date_of_birth").toLocalDate(),
+                        new OwnerResponseDTO(r.getLong("o_id"),
+                                r.getString("o_name")),
+                        new AnimalKindResponseDTO(r.getLong("ak_id"),
+                                r.getString("ak_name"),
+                                r.getFloat("avglifeexpectancy")),
+                        new AnimalRaceResponseDTO(r.getLong("ar_id"),
+                                r.getString("race")));
                 list.add(ar);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    @Override
+    public AnimalResponseDTO getAnimalById(Long id) {
+        AnimalResponseDTO animalResponseDTO = null;
+        try (Connection con = DriverManager.getConnection(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD)) {
+            PreparedStatement ps = con.prepareStatement("""
+                    SELECT a.name,a.date_of_birth,ak.id as ak_id, ak.name as ak_name, ak.avglifeexpectancy,
+                     ar.id as ar_id, ar.name as ar_name, o.id as o_id, o.name as o_name
+                    FROM ANIMALS a JOIN ANIMAL_KINDS ak ON ak.id=a.animal_kind_id 
+                    JOIN ANIMAL_RACES ar ON a.animal_race_id = ar.id
+                    JOIN OWNERS o ON a.owner_id = o.id
+                    WHERE a.id = ?
+                    """);
+            ps.setLong(1, id);
+            var r = ps.executeQuery();
+            while (r.next()) {
+                 animalResponseDTO=new AnimalResponseDTO(id, r.getString("name"),
+                        r.getDate("date_of_birth").toLocalDate(),
+                        new OwnerResponseDTO(r.getLong("o_id"), r.getString("o_name")),
+                                new AnimalKindResponseDTO(r.getLong("ak_id"), r.getString("ak_name"),
+                                        r.getFloat("avglifeexpectancy")),
+                new AnimalRaceResponseDTO(r.getLong("ar_id"), r.getString("ar_name")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return animalResponseDTO;
     }
 
     public void createNewAnimal(CreateAnimalDto animal) {
@@ -65,20 +107,20 @@ public class DefaultAnimalRepository implements AnimalRepository {
     @Override
     public void editAnimal(EditAnimalDto animal) {
         try (Connection con = DriverManager.getConnection(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD)) {
-PreparedStatement ps=con.prepareStatement("""
-UPDATE ANIMALS SET NAME=?,DATE_OF_BIRTH=?,ANIMAL_KIND_ID=?,ANIMAL_RACE_ID=?
-WHERE ID = ?
-""");
-ps.setString(1,animal.name());
-ps.setDate(2,Date.valueOf(animal.dateOfBirth()));
-ps.setLong(3,animal.kindId());
-ps.setLong(4,animal.raceId());
-ps.setLong(5,animal.id());
-ps.execute();
-        }catch (SQLException e){
+            PreparedStatement ps = con.prepareStatement("""
+                    UPDATE ANIMALS SET NAME=?,DATE_OF_BIRTH=?,ANIMAL_KIND_ID=?,ANIMAL_RACE_ID=?
+                    WHERE ID = ?
+                    """);
+            ps.setString(1, animal.name());
+            ps.setDate(2, Date.valueOf(animal.dateOfBirth()));
+            ps.setLong(3, animal.kindId());
+            ps.setLong(4, animal.raceId());
+            ps.setLong(5, animal.id());
+            ps.execute();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        }
+    }
 
     public void deleteById(long animalId) {
         Long ownerId = null;

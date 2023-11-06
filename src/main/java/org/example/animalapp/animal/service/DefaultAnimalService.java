@@ -21,8 +21,13 @@ public class DefaultAnimalService implements AnimalService {
     }
 
     @Override
-    public List<AnimalResponseDTO> getAllAnimals() {
-        return animalRepository.getAllAnimals();
+    public List<AnimalResponseDTO> getAllAnimals(int page,int size) {
+        return animalRepository.getAllAnimals(page,size);
+    }
+
+    @Override
+    public AnimalResponseDTO getAnimalById(Long id) {
+        return animalRepository.getAnimalById(id);
     }
 
     @Override

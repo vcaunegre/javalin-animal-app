@@ -18,7 +18,13 @@ public class AnimalController {
     }
 
     public void index(Context ctx){
-    ctx.json(animalService.getAllAnimals());
+    ctx.json(animalService.getAllAnimals(
+            ctx.queryParamAsClass("page", Integer.class).getOrDefault(0),
+            ctx.queryParamAsClass("size",Integer.class).getOrDefault(10)));
+}
+
+public void getAnimalById(Context ctx){
+       ctx.json(animalService.getAnimalById(ctx.pathParamAsClass("id", Long.class).get()));
 }
 
 public void deleteById(Context ctx){

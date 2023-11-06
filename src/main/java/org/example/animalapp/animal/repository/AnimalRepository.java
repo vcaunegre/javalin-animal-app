@@ -5,10 +5,13 @@ import org.example.animalapp.animal.dto.CreateAnimalDto;
 import org.example.animalapp.animal.dto.EditAnimalDto;
 import org.example.animalapp.animal.entities.Animal;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface AnimalRepository {
-    List<AnimalResponseDTO> getAllAnimals();
+    List<AnimalResponseDTO> getAllAnimals(int page, int size);
+
+    AnimalResponseDTO getAnimalById(Long id);
 
     void deleteById(long animalId);
 

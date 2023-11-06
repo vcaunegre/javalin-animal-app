@@ -23,6 +23,9 @@ public class AnimalRouting extends Routing<AnimalController> {
             });
             path("api/animals", () -> {
                 get(ctx -> getController().index(ctx));
+                path("/{id}",()->{
+                    get(ctx->getController().getAnimalById(ctx));
+                });
                 post(ctx->getController().addAnimal(ctx));
                 put(ctx->getController().editAnimal(ctx));
                 path("delete-by-id/{id}", () -> {

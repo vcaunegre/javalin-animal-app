@@ -8,7 +8,9 @@ import org.example.animalapp.animal.entities.Animal;
 import java.util.List;
 
 public interface AnimalService {
-    List<AnimalResponseDTO> getAllAnimals();
+    List<AnimalResponseDTO> getAllAnimals(int page,int size);
+
+    AnimalResponseDTO getAnimalById(Long id);
 
     void deleteById(Long id);
 
@@ -17,4 +19,5 @@ public interface AnimalService {
     void deleteByName(String name);
 
     void editAnimal(EditAnimalDto animalDto);
+
 }
