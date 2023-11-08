@@ -18,6 +18,7 @@ public class WebModule extends AbstractModule {
     @NotNull
     public static WebModule create() {
         return new WebModule(Javalin.create(config->{
+            config.http.defaultContentType = "application/json";
             config.plugins.enableCors(cors -> {
                 cors.add(CorsPluginConfig::anyHost);
             });
