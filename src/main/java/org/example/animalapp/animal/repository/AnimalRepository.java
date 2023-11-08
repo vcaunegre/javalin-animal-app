@@ -3,9 +3,7 @@ package org.example.animalapp.animal.repository;
 import org.example.animalapp.animal.dto.AnimalResponseDTO;
 import org.example.animalapp.animal.dto.CreateAnimalDto;
 import org.example.animalapp.animal.dto.EditAnimalDto;
-import org.example.animalapp.animal.entities.Animal;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 public interface AnimalRepository {

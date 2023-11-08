@@ -7,11 +7,11 @@ import org.example.animalapp.animal_kind.dto.KindResponse;
 import java.util.List;
 
 public interface AnimalKindService {
-    public List<KindResponse> getAllKinds();
+    List<KindResponse> getAllKinds();
 
-    public void addKind(CreateKind ck);
+    void addKind(CreateKind ck);
 
-    public void deleteKind(Long id);
+    void deleteKind(Long id);
 
-    public void editKind(EditKind ek);
+    void editKind(EditKind ek);
 }

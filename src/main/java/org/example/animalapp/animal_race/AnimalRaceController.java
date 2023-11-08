@@ -8,7 +8,7 @@ import org.example.animalapp.animal_race.service.AnimalRaceService;
 
 public class AnimalRaceController {
 
-    private AnimalRaceService animalRaceService;
+    private final AnimalRaceService animalRaceService;
 
 
 

@@ -4,14 +4,11 @@ import io.javalin.http.Context;
 import jakarta.inject.Inject;
 import org.example.animalapp.animal_kind.dto.CreateKind;
 import org.example.animalapp.animal_kind.dto.EditKind;
-import org.example.animalapp.animal_kind.dto.KindResponse;
 import org.example.animalapp.animal_kind.service.AnimalKindService;
-
-import java.util.List;
 
 public class AnimalKindController {
 
-    private AnimalKindService animalKindService;
+    private final AnimalKindService animalKindService;
 
 
 

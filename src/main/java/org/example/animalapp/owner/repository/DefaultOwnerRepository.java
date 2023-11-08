@@ -1,5 +1,6 @@
 package org.example.animalapp.owner.repository;
 
+import io.javalin.http.InternalServerErrorResponse;
 import org.example.Utils;
 import org.example.animalapp.owner.dto.EditOwnerDto;
 import org.example.animalapp.owner.dto.OwnerDto;
@@ -19,7 +20,7 @@ public class DefaultOwnerRepository implements OwnerRepository {
                 owners.add(new OwnerDto(rs.getLong("id"), rs.getString("name")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new InternalServerErrorResponse(e.getMessage());
         }
         return owners;
     }
@@ -32,7 +33,7 @@ public class DefaultOwnerRepository implements OwnerRepository {
             ps.setLong(2,ownerName.id());
             ps.execute();
         }catch (SQLException e){
-            e.printStackTrace();
+            throw new InternalServerErrorResponse(e.getMessage());
         }
         }
 }

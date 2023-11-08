@@ -5,12 +5,11 @@ import io.javalin.http.Context;
 import jakarta.inject.Inject;
 import org.example.animalapp.animal.dto.CreateAnimalDto;
 import org.example.animalapp.animal.dto.EditAnimalDto;
-import org.example.animalapp.animal.entities.Animal;
 import org.example.animalapp.animal.service.AnimalService;
 
 @Singleton
 public class AnimalController {
-   private AnimalService animalService;
+   private final AnimalService animalService;
 
    @Inject
     public AnimalController(AnimalService animalService) {

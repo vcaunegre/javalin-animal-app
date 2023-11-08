@@ -12,7 +12,7 @@ import java.util.Optional;
 @Singleton
 public class Startup {
     @Inject(optional = true)
-    private Map<EntrypointType, AppEntrypoint> entrypoints = Collections.emptyMap();
+    private final Map<EntrypointType, AppEntrypoint> entrypoints = Collections.emptyMap();
 
     public void boot(EntrypointType entrypointType, String[] args) {
         var entryPoint = Optional.ofNullable(entrypoints.get(entrypointType));

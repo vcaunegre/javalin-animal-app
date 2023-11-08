@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultAnimalRaceRepository implements AnimalRaceRepository {
-    static Logger logger = LoggerFactory.getLogger(App.class);
+    static final Logger logger = LoggerFactory.getLogger(App.class);
 
     @Override
     public List<GetRaceDTO> getAllRacesForAKind(Long kindId) {

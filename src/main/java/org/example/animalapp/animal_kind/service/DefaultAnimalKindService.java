@@ -10,7 +10,7 @@ import java.util.List;
 
 public class DefaultAnimalKindService implements AnimalKindService{
 
-    AnimalKindRepository animalKindRepository;
+    final AnimalKindRepository animalKindRepository;
 
     @Inject
     public DefaultAnimalKindService(AnimalKindRepository animalKindRepository) {

@@ -11,10 +11,11 @@ import java.util.Set;
 
 @Singleton
 class WebEntrypoint implements AppEntrypoint {
-    private Javalin app;
+    private final Javalin app;
 
+    @SuppressWarnings("rawtypes")
     @Inject(optional = true)
-    private Set<Routing> routes = Collections.emptySet();
+    private final Set<? extends Routing> routes = Collections.emptySet();
 
     @Inject
     public WebEntrypoint(Javalin app) {
@@ -28,6 +29,6 @@ class WebEntrypoint implements AppEntrypoint {
     }
 
     private void bindRoutes() {
-        routes.forEach(r -> r.bindRoutes());
+        routes.forEach(Routing::bindRoutes);
     }
 }

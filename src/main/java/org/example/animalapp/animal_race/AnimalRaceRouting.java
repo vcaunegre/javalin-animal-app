@@ -9,7 +9,7 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class AnimalRaceRouting extends Routing<AnimalRaceController> {
 
-    private Javalin javalin;
+    private final Javalin javalin;
 
     @Inject
     public AnimalRaceRouting(Javalin javalin) {
@@ -18,15 +18,13 @@ public class AnimalRaceRouting extends Routing<AnimalRaceController> {
 
     @Override
     public void bindRoutes() {
-        javalin.routes(() -> {
-            ApiBuilder.path("/api/animal-races", () -> {
-                path("/{id}", () -> {
-                    get(ctx -> getController().getAllRaceForKind(ctx));
-                    delete(ctx -> getController().deleteRace(ctx));
-                });
-                post(ctx -> getController().addRace(ctx));
-                put(ctx -> getController().editRace(ctx));
+        javalin.routes(() -> ApiBuilder.path("/api/animal-races", () -> {
+            path("/{id}", () -> {
+                get(ctx -> getController().getAllRaceForKind(ctx));
+                delete(ctx -> getController().deleteRace(ctx));
             });
-        });
+            post(ctx -> getController().addRace(ctx));
+            put(ctx -> getController().editRace(ctx));
+        }));
     }
 }

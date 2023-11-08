@@ -2,15 +2,12 @@ package org.example;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-import java.io.IOException;
-import java.net.*;
-
 public class Utils {
 
-        private static Dotenv dotenv = inProduction() ? null : Dotenv.load();
-        public static String PG_URL = inProduction() ? System.getenv("PG_URL") : dotenv.get("PG_URL") ;
-        public static String PG_PASSWORD = inProduction() ? System.getenv("PG_PASSWORD") : dotenv.get("PG_PASSWORD") ;
-        public static String PG_USER =  inProduction() ? System.getenv("PG_USER") : dotenv.get("PG_USER") ;
+        private static final Dotenv dotenv = inProduction() ? null : Dotenv.load();
+        public static final String PG_URL = inProduction() ? System.getenv("PG_URL") : dotenv != null ? dotenv.get("PG_URL") : null;
+        public static final String PG_PASSWORD = inProduction() ? System.getenv("PG_PASSWORD") : dotenv != null ? dotenv.get("PG_PASSWORD") : null;
+        public static final String PG_USER =  inProduction() ? System.getenv("PG_USER") : dotenv != null ? dotenv.get("PG_USER") : null;
 
     public static boolean inProduction(){
         String port=System.getenv("PORT");

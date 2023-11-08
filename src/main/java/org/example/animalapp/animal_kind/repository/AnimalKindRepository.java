@@ -1,8 +1,5 @@
 package org.example.animalapp.animal_kind.repository;
 
-import org.example.animalapp.animal.dto.AnimalResponseDTO;
-import org.example.animalapp.animal.dto.CreateAnimalDto;
-import org.example.animalapp.animal.dto.EditAnimalDto;
 import org.example.animalapp.animal_kind.dto.CreateKind;
 import org.example.animalapp.animal_kind.dto.EditKind;
 import org.example.animalapp.animal_kind.dto.KindResponse;

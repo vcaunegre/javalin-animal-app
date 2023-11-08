@@ -6,6 +6,6 @@ import org.example.animalapp.owner.dto.OwnerDto;
 import java.util.List;
 
 public interface OwnerRepository {
-    public List<OwnerDto> getOwners();
-    public void editOwner(EditOwnerDto ownerName);
+    List<OwnerDto> getOwners();
+    void editOwner(EditOwnerDto ownerName);
 }

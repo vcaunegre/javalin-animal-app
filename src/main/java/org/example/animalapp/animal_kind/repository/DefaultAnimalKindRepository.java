@@ -1,6 +1,6 @@
 package org.example.animalapp.animal_kind.repository;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import io.javalin.http.InternalServerErrorResponse;
 import org.example.Utils;
 import org.example.animalapp.animal_kind.dto.CreateKind;
 import org.example.animalapp.animal_kind.dto.EditKind;
@@ -22,13 +22,11 @@ public class DefaultAnimalKindRepository implements AnimalKindRepository {
                     """);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                KindResponse kr = new KindResponse(rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getFloat("avgLifeExpectancy"));
+                KindResponse kr = new KindResponse(rs.getLong("id"), rs.getString("name"), rs.getFloat("avgLifeExpectancy"));
                 list.add(kr);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new InternalServerErrorResponse(e.getMessage());
         }
         return list;
     }
@@ -40,7 +38,7 @@ public class DefaultAnimalKindRepository implements AnimalKindRepository {
             ps.setLong(1, kindId);
             ps.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new InternalServerErrorResponse(e.getMessage());
         }
     }
 
@@ -52,7 +50,7 @@ public class DefaultAnimalKindRepository implements AnimalKindRepository {
             ps.setFloat(2, cKind.avgLifeExpectancy());
             ps.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new InternalServerErrorResponse(e.getMessage());
         }
     }
 
@@ -68,7 +66,7 @@ public class DefaultAnimalKindRepository implements AnimalKindRepository {
             ps.setLong(3, editKind.id());
             ps.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new InternalServerErrorResponse(e.getMessage());
         }
     }
 }

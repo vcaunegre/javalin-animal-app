@@ -9,7 +9,7 @@ import org.example.config.EntrypointType;
 import org.jetbrains.annotations.NotNull;
 
 public class WebModule extends AbstractModule {
-    private Javalin app;
+    private final Javalin app;
 
     public WebModule(Javalin app) {
         this.app = app;
@@ -19,9 +19,7 @@ public class WebModule extends AbstractModule {
     public static WebModule create() {
         return new WebModule(Javalin.create(config->{
             config.http.defaultContentType = "application/json";
-            config.plugins.enableCors(cors -> {
-                cors.add(CorsPluginConfig::anyHost);
-            });
+            config.plugins.enableCors(cors -> cors.add(CorsPluginConfig::anyHost));
         }));
     }
 

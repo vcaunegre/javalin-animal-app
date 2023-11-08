@@ -8,7 +8,7 @@ import org.example.animalapp.owner.repository.OwnerRepository;
 import java.util.List;
 
 public class DefaultOwnerService implements OwnerService{
-    private OwnerRepository ownerRepository;
+    private final OwnerRepository ownerRepository;
 
     @Inject
     public DefaultOwnerService(OwnerRepository ownerRepository) {

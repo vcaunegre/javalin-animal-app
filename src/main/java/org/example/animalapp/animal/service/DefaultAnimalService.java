@@ -5,7 +5,6 @@ import jakarta.inject.Singleton;
 import org.example.animalapp.animal.dto.AnimalResponseDTO;
 import org.example.animalapp.animal.dto.CreateAnimalDto;
 import org.example.animalapp.animal.dto.EditAnimalDto;
-import org.example.animalapp.animal.entities.Animal;
 import org.example.animalapp.animal.repository.AnimalRepository;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 @Singleton
 public class DefaultAnimalService implements AnimalService {
 
-    private AnimalRepository animalRepository;
+    private final AnimalRepository animalRepository;
 
     @Inject
     public DefaultAnimalService(AnimalRepository animalRepository) {
