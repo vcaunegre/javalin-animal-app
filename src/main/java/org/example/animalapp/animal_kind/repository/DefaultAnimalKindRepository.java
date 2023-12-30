@@ -1,7 +1,7 @@
 package org.example.animalapp.animal_kind.repository;
 
 import io.javalin.http.InternalServerErrorResponse;
-import org.example.Utils;
+import org.example.animalapp.Utils;
 import org.example.animalapp.animal_kind.dto.CreateKind;
 import org.example.animalapp.animal_kind.dto.EditKind;
 import org.example.animalapp.animal_kind.dto.KindResponse;

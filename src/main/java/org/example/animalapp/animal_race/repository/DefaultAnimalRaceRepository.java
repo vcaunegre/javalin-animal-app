@@ -1,7 +1,7 @@
 package org.example.animalapp.animal_race.repository;
 
 import org.example.App;
-import org.example.Utils;
+import org.example.animalapp.Utils;
 import org.example.animalapp.animal_race.dto.GetRaceDTO;
 import org.example.animalapp.animal_race.dto.RaceDTO;
 import org.example.animalapp.animal_race.dto.RaceEditDTO;

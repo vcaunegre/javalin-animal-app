@@ -1,7 +1,7 @@
 package org.example.animalapp.owner.repository;
 
 import io.javalin.http.InternalServerErrorResponse;
-import org.example.Utils;
+import org.example.animalapp.Utils;
 import org.example.animalapp.owner.dto.EditOwnerDto;
 import org.example.animalapp.owner.dto.OwnerDto;
 

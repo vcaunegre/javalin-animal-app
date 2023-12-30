@@ -2,7 +2,7 @@ package org.example.animalapp.animal.repository;
 
 import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.NotFoundResponse;
-import org.example.Utils;
+import org.example.animalapp.Utils;
 import org.example.animalapp.animal.dto.*;
 
 import java.sql.*;
