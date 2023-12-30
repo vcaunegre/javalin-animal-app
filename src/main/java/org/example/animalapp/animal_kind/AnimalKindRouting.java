@@ -3,10 +3,12 @@ package org.example.animalapp.animal_kind;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.ApiBuilder;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.example.config.Routing;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
+@Singleton
 public class AnimalKindRouting extends Routing<AnimalKindController> {
 
     private final Javalin javalin;

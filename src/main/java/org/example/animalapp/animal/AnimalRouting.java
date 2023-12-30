@@ -1,11 +1,13 @@
 package org.example.animalapp.animal;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.javalin.Javalin;
 import org.example.config.Routing;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
+@Singleton
 public class AnimalRouting extends Routing<AnimalController> {
     private final Javalin javalin;
 

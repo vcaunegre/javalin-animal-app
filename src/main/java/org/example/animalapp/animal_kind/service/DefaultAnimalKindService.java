@@ -1,6 +1,7 @@
 package org.example.animalapp.animal_kind.service;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.example.animalapp.animal_kind.dto.CreateKind;
 import org.example.animalapp.animal_kind.dto.EditKind;
 import org.example.animalapp.animal_kind.dto.KindResponse;
@@ -8,6 +9,7 @@ import org.example.animalapp.animal_kind.repository.AnimalKindRepository;
 
 import java.util.List;
 
+@Singleton
 public class DefaultAnimalKindService implements AnimalKindService{
 
     final AnimalKindRepository animalKindRepository;

@@ -1,6 +1,7 @@
 package org.example.animalapp.animal_kind.repository;
 
 import io.javalin.http.InternalServerErrorResponse;
+import jakarta.inject.Singleton;
 import org.example.animalapp.Utils;
 import org.example.animalapp.animal_kind.dto.CreateKind;
 import org.example.animalapp.animal_kind.dto.EditKind;
@@ -10,6 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class DefaultAnimalKindRepository implements AnimalKindRepository {
 
 

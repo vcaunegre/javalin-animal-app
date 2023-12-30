@@ -1,6 +1,7 @@
 package org.example.animalapp.owner.repository;
 
 import io.javalin.http.InternalServerErrorResponse;
+import jakarta.inject.Singleton;
 import org.example.animalapp.Utils;
 import org.example.animalapp.owner.dto.EditOwnerDto;
 import org.example.animalapp.owner.dto.OwnerDto;
@@ -9,6 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class DefaultOwnerRepository implements OwnerRepository {
     @Override
     public List<OwnerDto> getOwners() {

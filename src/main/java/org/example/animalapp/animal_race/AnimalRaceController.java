@@ -2,10 +2,12 @@ package org.example.animalapp.animal_race;
 
 import io.javalin.http.Context;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.example.animalapp.animal_race.dto.RaceDTO;
 import org.example.animalapp.animal_race.dto.RaceEditDTO;
 import org.example.animalapp.animal_race.service.AnimalRaceService;
 
+@Singleton
 public class AnimalRaceController {
 
     private final AnimalRaceService animalRaceService;

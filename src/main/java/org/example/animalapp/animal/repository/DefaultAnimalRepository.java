@@ -2,6 +2,7 @@ package org.example.animalapp.animal.repository;
 
 import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.NotFoundResponse;
+import jakarta.inject.Singleton;
 import org.example.animalapp.Utils;
 import org.example.animalapp.animal.dto.*;
 
@@ -9,6 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class DefaultAnimalRepository implements AnimalRepository {
 //    Logger logger = LoggerFactory.getLogger(App.class);
 

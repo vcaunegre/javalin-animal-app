@@ -1,5 +1,6 @@
 package org.example.animalapp.animal_race.repository;
 
+import jakarta.inject.Singleton;
 import org.example.App;
 import org.example.animalapp.Utils;
 import org.example.animalapp.animal_race.dto.GetRaceDTO;
@@ -12,6 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class DefaultAnimalRaceRepository implements AnimalRaceRepository {
     static final Logger logger = LoggerFactory.getLogger(App.class);
 
