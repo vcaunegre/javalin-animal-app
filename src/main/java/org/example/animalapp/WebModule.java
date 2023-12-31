@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class WebModule extends AbstractModule {
     private final Javalin app;
 
-    public WebModule(Javalin app) {
+    private WebModule(Javalin app) {
         this.app = app;
     }
 

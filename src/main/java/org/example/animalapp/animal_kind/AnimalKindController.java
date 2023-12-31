@@ -12,27 +12,24 @@ public class AnimalKindController {
 
     private final AnimalKindService animalKindService;
 
-
-
     @Inject
     public AnimalKindController(AnimalKindService animalKindService) {
         this.animalKindService = animalKindService;
     }
 
-
-    public void getAllKinds(Context ctx){
+    public void getAllKinds(Context ctx) {
         ctx.json(animalKindService.getAllKinds());
     }
 
-    public void addKind(Context ctx){
+    public void addKind(Context ctx) {
         animalKindService.addKind(ctx.bodyAsClass(CreateKind.class));
     }
 
-    public void deleteKind(Context ctx){
+    public void deleteKind(Context ctx) {
         animalKindService.deleteKind(ctx.pathParamAsClass("id", Long.class).get());
     }
 
-    public void editKind(Context ctx){
+    public void editKind(Context ctx) {
         animalKindService.editKind(ctx.bodyAsClass(EditKind.class));
     }
 

@@ -31,16 +31,7 @@ public class DefaultAnimalRepository implements AnimalRepository {
             var r = ps.executeQuery();
 
             while (r.next()) {
-                AnimalResponseDTO ar = new AnimalResponseDTO(r.getLong("id"),
-                        r.getString("name"),
-                        r.getDate("date_of_birth").toLocalDate(),
-                        new OwnerResponseDTO(r.getLong("o_id"),
-                                r.getString("o_name")),
-                        new AnimalKindResponseDTO(r.getLong("ak_id"),
-                                r.getString("ak_name"),
-                                r.getFloat("avglifeexpectancy")),
-                        new AnimalRaceResponseDTO(r.getLong("ar_id"),
-                                r.getString("race")));
+                AnimalResponseDTO ar = new AnimalResponseDTO(r.getLong("id"), r.getString("name"), r.getDate("date_of_birth").toLocalDate(), new OwnerResponseDTO(r.getLong("o_id"), r.getString("o_name")), new AnimalKindResponseDTO(r.getLong("ak_id"), r.getString("ak_name"), r.getFloat("avglifeexpectancy")), new AnimalRaceResponseDTO(r.getLong("ar_id"), r.getString("race")));
                 list.add(ar);
             }
         } catch (SQLException e) {
@@ -64,13 +55,7 @@ public class DefaultAnimalRepository implements AnimalRepository {
             ps.setLong(1, id);
             var r = ps.executeQuery();
             if (r.next()) {
-                animalResponseDTO = new AnimalResponseDTO(id, r.getString("name"),
-                        r.getDate("date_of_birth").toLocalDate(),
-                        new OwnerResponseDTO(r.getLong("o_id"), r.getString("o_name")),
-                        new AnimalKindResponseDTO(r.getLong("ak_id"), r.getString("ak_name"),
-                                r.getFloat("avglifeexpectancy")),
-                        new AnimalRaceResponseDTO(r.getLong("ar_id"), r.getString("ar_name")
-                        ));
+                animalResponseDTO = new AnimalResponseDTO(id, r.getString("name"), r.getDate("date_of_birth").toLocalDate(), new OwnerResponseDTO(r.getLong("o_id"), r.getString("o_name")), new AnimalKindResponseDTO(r.getLong("ak_id"), r.getString("ak_name"), r.getFloat("avglifeexpectancy")), new AnimalRaceResponseDTO(r.getLong("ar_id"), r.getString("ar_name")));
             } else {
                 throw new NotFoundResponse("NO Animal found for id " + id);
             }

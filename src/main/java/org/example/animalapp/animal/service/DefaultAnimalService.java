@@ -20,8 +20,8 @@ public class DefaultAnimalService implements AnimalService {
     }
 
     @Override
-    public List<AnimalResponseDTO> getAllAnimals(int page,int size) {
-        return animalRepository.getAllAnimals(page,size);
+    public List<AnimalResponseDTO> getAllAnimals(int page, int size) {
+        return animalRepository.getAllAnimals(page, size);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class DefaultAnimalService implements AnimalService {
 
     @Override
     public void createAnimal(CreateAnimalDto createAnimalDto) {
-         animalRepository.createNewAnimal(createAnimalDto);
+        animalRepository.createNewAnimal(createAnimalDto);
     }
 
     @Override
