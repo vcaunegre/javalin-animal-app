@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: dockeruser
+      POSTGRES_PASSWORD: dockerpassword
+      POSTGRES_DB: dockerdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "7070:7070"
+    depends_on:
+      - postgres
+    environment:
+      PG_URL: jdbc:postgresql://postgres:5432/dockerdb
+      PG_USER: dockeruser
+      PG_PASSWORD: dockerpassword
+      PORT: 7070
+
+volumes:
+  postgres-data:
+
+
