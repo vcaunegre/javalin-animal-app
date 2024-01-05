@@ -25,7 +25,7 @@ class WebEntrypoint implements AppEntrypoint {
     @Override
     public void boot(String[] args) {
         bindRoutes();
-        app.start(7070);
+        app.start(Integer.parseInt(Utils.PG_PORT));
     }
 
     private void bindRoutes() {
