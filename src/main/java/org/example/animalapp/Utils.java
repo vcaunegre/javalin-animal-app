@@ -1,7 +1,6 @@
 package org.example.animalapp;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.flywaydb.core.Flyway;
 
 
 public class Utils {
@@ -17,8 +16,8 @@ public class Utils {
     }
 
     public static void flywayConfig() {
-        Flyway flyway = Flyway.configure().dataSource(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD).load();
-        flyway.baseline();
-        flyway.migrate();
+//        Flyway flyway = Flyway.configure().dataSource(Utils.PG_URL, Utils.PG_USER, Utils.PG_PASSWORD).load();
+//        flyway.baseline();
+//        flyway.migrate();
     }
 }
